@@ -80,7 +80,7 @@ def html_get_page_title(url)
       agent = Mechanize.new
       page = agent.get(url)
       h['title'] = page.title
-      h['images'] = page.image_urls
+      h['images'] = page.image_urls.to_json
       if page.meta().empty?
         desc = ''
       else
