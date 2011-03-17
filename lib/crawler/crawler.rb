@@ -31,7 +31,7 @@ end
 # Sedue
 def sedue_get(w)
   # TODO: AND query
-  json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=(search:#{URI.encode(w)})?get=id,user,text,hashtags?sort=time:desc?from=0?to=1000")
+  json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=(search:#{URI.encode(w)})?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000")
   JSON.parse(json)
 end
 
