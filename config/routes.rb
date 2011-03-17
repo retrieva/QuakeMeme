@@ -38,6 +38,18 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing or commenting them out if you're using named routes and resources.
+  map.root :controller => 'contents'
+
+  map.connect('api/get_content',{
+        :controller => :api,
+        :action => :get_contents,
+        :conditions => {:method => :get}
+      })
+
+  map.resources :pages, :active_scaffold => true
+  map.resources :categories, :active_scaffold => true
+  map.resources :contents, :active_scaffold => true
+
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end
