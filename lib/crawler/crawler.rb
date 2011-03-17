@@ -64,22 +64,36 @@ end
 
 # Database
 ActiveRecord::Base.establish_connection(
-  :adapter  => "sqlite3",
-  :database => "db/development.sqlite3",
+#:adapter  => "sqlite3",
+#:database => "db/development.sqlite3",
+  :adapter  => "mysql",
+  :database => "quakememe_production",
+  :user => "root",
+  :encoding => "utf8",
   :timeout  => 5000)
 
 # HTML
 def html_get_page_title(url)
+  h = {}
   begin
     timeout(5) do
       agent = Mechanize.new
       page = agent.get(url)
-      return page.title
+      h['title'] = page.title
+      h['images'] = page.image_urls
+      if page.meta().empty?
+        desc = ''
+      else
+        desc = page.meta()['description']
+      end
+      desc = '' if desc.nil?
+      h['description'] = desc
+      return h
     end
   rescue Timeout::Error
-    return ""
+    return {}
   rescue
-    return ""
+    return {}
   end
 end
 
@@ -87,15 +101,17 @@ end
 def add_page(url)
   u = Page.find(:first, :conditions => ["url = ?", url])
   return unless u.nil?
-  t = html_get_page_title(url)
+  h = html_get_page_title(url)
+  return if h.empty?
+  t = h['title']
 
   page = Page.new
   page.url = url
   page.spam = 0
   page.alive = (not (t.nil? or t.empty?))
   page.title = t
-  page.description = ""
-  page.image_url = ""
+  page.description = h['description']
+  page.image_url = h['images'].to_json
   page.save
 end
 
