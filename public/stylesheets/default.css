@@ -1,0 +1,22 @@
+/* 
+    Document   : default
+    Created on : 2011/03/17, 17:30:11
+    Author     : irony
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+ul.header_menu li{
+    display: inline;
+    font-size: 12pt;
+    margin-left: 3px;
+}
