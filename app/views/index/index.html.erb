@@ -16,7 +16,7 @@
 
 <div class="header">
 	<p class="headline">QuakeMemeは、Twitterでのつぶやきを元に地震関連サイトをまとめています。</p>
-	<h1 class="tail">QuakeMeme</h1>
+	<h1 class="tail"><a href="/">QuakeMeme</a></h1>
 	<div class="nav">
 		<ul class="cfx"
 		<%- @cattree.each do |category| %>
@@ -96,6 +96,7 @@
 		<p class="thumb"><a href="${url}"><img src="${thumb_url}" width="80" /></a></p>
 		{{/if}}
 		<h2><a href="${url}">${title}</a></h2>
+		<p class="domain"><a href="${url}">${domain}</a></p>
 		<p class="text">${description}</p>
 	</div>
 </div>

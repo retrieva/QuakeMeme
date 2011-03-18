@@ -42,7 +42,6 @@ h1 {
 	-moz-border-radius: 8px;
 	border-radius: 8px;
 	background: #e41;
-	color: #fff;
 	font-family: 'Amaranth', serif;
 	font-style: italic;
 	letter-spacing: -.05em;
@@ -52,6 +51,20 @@ h1 {
 	-o-transform: rotate(-5deg);
 	transform: rotate(-5deg);
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+}
+
+h1 :link, h1 :visited {
+	color: #fff;
+}
+
+h1 :link:active, h1 :visited:active,
+h1 :link:hover, h1 :visited:hover {
+	color: #c20;
+	text-decoration: none;
+	text-shadow: 0 -1px 5px #ffc,
+	             0  1px 5px #ffc,
+	             -1px 0 5px #ffc,
+	              1px 0 5px #ffc;
 }
 
 h1:before,
@@ -218,7 +231,7 @@ h1:after {
 }
 
 .page h2 {
-	margin-top: 0;
+	margin: 0;
 }
 
 .page .body p {
