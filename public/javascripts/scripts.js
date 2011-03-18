@@ -34,21 +34,28 @@ var pages = {
 			$pages.find('.loading').remove();
 			var $tmpl_page = $('#tmpl-page'),
 			    last_id = that.option('last_id');
-			$.each(json.pages, function (i, page) {
-				page.search_url = 'http://search.twitter.com/search?' + $.param({ q: page.url });
-				if (page.count > 200) {
-					//page.thumb_url = 'http://img.simpleapi.net/small/' + page.url;
-				}
-				// page.thumb_url = page.image_url.length ? page.image_url[page.image_url.length - 1] : null;
-				var $page = $tmpl_page.tmpl(page);
-				if (!$first.length) {
-					$page.appendTo('.pages');
-				}
-				else {
-					$page.insertBefore($first);
-				}
-			});
+			if (json.pages.length) {
+				$.each(json.pages, function (i, page) {
+					page.search_url = 'http://search.twitter.com/search?' + $.param({ q: page.url });
+					if (page.count > 200) {
+					//	page.thumb_url = 'http://img.simpleapi.net/small/' + page.url;
+					}
+					// page.thumb_url = page.image_url.length ? page.image_url[page.image_url.length - 1] : null;
+					var $page = $tmpl_page.tmpl(page);
+					if (!$first.length) {
+						$page.appendTo('.pages');
+					}
+					else {
+						$page.insertBefore($first);
+					}
+				});
+			}
+			else {
+				$('<p>').addClass('notfound').text('このカテゴリのウェブページはまだありません。').appendTo('.pages');
+			}
 			that.option('last_id', json.pages[0].id);
+		}).error(function (xhr, msg) {
+			that.trace(msg, xhr);
 		}).complete(function () {
 			$pages.find('.loading').remove();
 			that.updating = false;
@@ -78,6 +85,11 @@ var pages = {
 			return value;
 		}
 		node.value = value;
+	},
+	trace: function () {
+		if (window.console && $.isFunction(console.log)) {
+			console.log.apply(console, arguments);
+		}
 	}
 };
 
