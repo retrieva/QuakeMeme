@@ -5,7 +5,7 @@
 var pages = {
 	update_tid: null,
 	update_sec: null,
-	update_url: 'http://ec2-175-41-160-220.ap-southeast-1.compute.amazonaws.com/api/get_contents?callback=?',
+	update_url: 'http://ec2-175-41-160-220.ap-southeast-1.compute.amazonaws.com/api/get_contents?cid=1&type=1&callback=?',
 	updating: false,
 	update: function (force) {
 		if (this.updating) {
@@ -19,14 +19,16 @@ var pages = {
 		}
 		var $first = $('.pages .page:first-child');
 
+		$pages.append($('<div>').addClass('loading'));
+
 		var that = this;
-		$.getJSON(this.update_url, {
-			cid: pages.option('cid'),
-			type: pages.option('type')
-		}, function (json) {
+		$.getJSON(this.update_url, function (json) {
+			$pages.find('.loading').remove();
 			var $tmpl_page = $('#tmpl-page'),
 			    last_id = that.option('last_id');
 			$.each(json.pages, function (i, page) {
+				page.search_url = 'http://search.twitter.com/search?' + $.param({ q: page.url });
+				//page.thumb_url = page.image_url.length ? page.image_url[0] : null;
 				var $page = $tmpl_page.tmpl(page);
 				if (!$first.length) {
 					$page.appendTo('.pages');
@@ -48,7 +50,7 @@ var pages = {
 		}
 		var that = this;
 		this.update_tid = setInterval(function () {
-			that.update();
+			that.update(true);
 		}, this.update_sec * 1000);
 	},
 	option: function (name, value) {
@@ -72,6 +74,6 @@ $(function ($) {
 	pages.update_sec = pages.option('interval') || 60;
 
 	pages.update(true);
-	//pages.update_init();
+	pages.update_init();
 
 });

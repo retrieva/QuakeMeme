@@ -119,8 +119,7 @@ def add_page(url)
   page.alive = (not (t.nil? or t.empty?))
   page.title = t
   page.description = h['description']
-
-  page.image_url = h['images'].to_json
+  page.image_url = h['images']
   page.save
 end
 
