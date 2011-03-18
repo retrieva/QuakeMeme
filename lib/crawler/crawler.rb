@@ -32,6 +32,7 @@ end
 
 # Sedue
 def sedue_get(w)
+  return {} if w.nil? or w.empty?
   # TODO: AND query
   w_separated = w.to_s.split("|")
   qstr = ""
@@ -56,6 +57,7 @@ end
 def sedue_url_get(w)
   h = {}
   json = sedue_get(w)
+  return [] if json.nil? or json.empty?
   json['docs'].each { |d|
     URI.extract(d['fields']['text']).each { |u|
       next unless u.include?("http")
