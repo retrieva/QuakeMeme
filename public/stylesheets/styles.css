@@ -137,13 +137,13 @@ h1:after {
 }
 
 .nav>ul>li>ul>li:last-child>a {
-	-moz-border-radius: 0 0 5px 5px;
-	border-radius: 0 0 5px 5px;
+	-moz-border-radius: 0 0 0 5px;
+	border-radius: 0 0 0 5px;
 }
 
 .nav>ul>li>ul>li:last-child>a:only-child {
-	-moz-border-radius: 0 0 0 5px;
-	border-radius: 0 0 0 5px;
+	-moz-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
 }
 
 .nav a:hover,
