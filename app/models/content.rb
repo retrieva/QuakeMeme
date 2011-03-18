@@ -21,6 +21,7 @@ class Content < ActiveRecord::Base
         tmp = {
           :count => p[0],
           :url => p[1],
+          :original_url => page.original_url || "",
           :id => page.id,
           :title => page.title || "",
           :description => page.description || "",
