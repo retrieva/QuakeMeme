@@ -55,6 +55,10 @@ var pages = {
 			}
 			that.option('last_id', json.pages[0].id);
 		}).error(function (xhr, msg) {
+			if (msg === 'error' && xhr.status === 404) {
+				$('<p>').addClass('notfound').text('このカテゴリのウェブページはまだありません。').appendTo('.pages');
+				return;
+			}
 			that.trace(msg, xhr);
 		}).complete(function () {
 			$pages.find('.loading').remove();
