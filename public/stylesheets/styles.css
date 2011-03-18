@@ -105,7 +105,14 @@ h1:after {
 	margin-top: 10px;
 }
 
-.nav ul li:hover ul {
+.nav ul ul ul {
+	top: 0;
+	left: 6em;
+	margin-top: 0;
+	margin-left: -1px;
+}
+
+.nav li:hover>ul {
 	display: block;
 }
 
@@ -129,9 +136,14 @@ h1:after {
 	margin-bottom: -1px;
 }
 
-.nav ul ul li:last-child a {
+.nav>ul>li>ul>li:last-child>a {
 	-moz-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
+}
+
+.nav>ul>li>ul>li:last-child>a:only-child {
+	-moz-border-radius: 0 0 0 5px;
+	border-radius: 0 0 0 5px;
 }
 
 .nav a:hover,
