@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# Copyright (c) 2007 Bradley Taylor, bradley@railsmachine.com
+#
+# unicorn
+#
+# chkconfig: - 85 15
+# description: unicorn
+#
+source /etc/profile.d/rails_env.sh
+CONF_FILE=/etc/unicorn/unicorn.conf
+RETVAL=0
+
+# Gracefully exit if the controller is missing.
+which unicorn_rails >/dev/null || exit 0
+
+# Go no further if config directory is missing.
+[ -d "$RAILS_HOME" ] || exit 0
+
+start() {
+  cd $RAILS_HOME
+  unicorn_rails -c $CONF_FILE -E $RAILS_ENV -D
+}
+
+stop() {
+  pgrep unicorn_rails | xargs kill -9
+}
+
+case "$1" in
+    start)
+      start
+      RETVAL=$?
+  ;;
+    stop)
+      stop
+      RETVAL=$?
+  ;;
+    restart)
+      stop
+      start
+      RETVAL=$?
+  ;;
+    *)
+      echo "Usage: unicorn {start|stop|restart|status}"
+      exit 1
+  ;;
+esac      
+
+exit $RETVAL
