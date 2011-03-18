@@ -91,8 +91,8 @@ h1:after {
 }
 
 .nav ul li {
-	float: left;
 	margin-right: -1px;
+	display: inline-block;
 	position: relative;
 	width: 6em;
 }
@@ -107,10 +107,6 @@ h1:after {
 
 .nav ul li:hover ul {
 	display: block;
-}
-
-.nav ul ul li {
-	float: none;
 }
 
 .nav a {
@@ -131,6 +127,11 @@ h1:after {
 	background: #ccc;
 	border-width: 1px;
 	margin-bottom: -1px;
+}
+
+.nav ul ul li:last-child a {
+	-moz-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
 }
 
 .nav a:hover,

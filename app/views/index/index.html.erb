@@ -18,17 +18,17 @@
 	<p class="headline">Quake Memeはtwitterでつぶやかれた地震に関するURLを収集しているサイトです。</p>
 	<h1 class="tail">Quake Meme</h1>
 	<div class="nav">
-		<ul class="cfx">
+		<ul class="cfx"
 		<%- @cattree.each do |category| %>
-			<li><%= link_to category[:name], { :type => @type, :category => @category_to_s[category[:id]] } %>
+			><li><%= link_to category[:name], { :type => @type, :category => @category_to_s[category[:id]] } %>
 			<% if !category[:children].empty? %><ul>
 				<%- category[:children].each do |category| %>
 				<li><%= link_to category[:name], { :type => @type, :category => @category_to_s[category[:id]] } %></li>
 				<%- end %>
 			</ul><% end %>
-			</li>
+			</li
 		<%- end %>
-		</ul>
+		></ul>
 	</div>
 </div>
 
