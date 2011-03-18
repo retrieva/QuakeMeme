@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <title>QuakeMeme</title>
-<link href="http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:200,300,400,700" rel="stylesheet" type="text/css" >
+<%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Amaranth:regular", :media => "all" %>
 <%= stylesheet_link_tag "x.min.css", :media => "all" %>
 <%= stylesheet_link_tag "styles.css", :media => "all" %>
-<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.5.1.min.js"></script>
-<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<%= javascript_include_tag "http://ajax.microsoft.com/ajax/jquery/jquery-1.5.1.min.js" %>
+<%= javascript_include_tag "http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" %>
 <%= javascript_include_tag "scripts.js" %>
 </head>
 <body>
@@ -15,7 +15,8 @@
 <div class="wrapper">
 
 <div class="header">
-	<h1>Quake Meme</h1>
+	<p class="headline">Quake Memeはtwitterでつぶやかれた地震に関するURLを収集しているサイトです。</p>
+	<h1 class="tail">Quake Meme</h1>
 	<div class="nav">
 		<ul class="cfx">
 		<%- @cattree.each do |category| %>
@@ -31,16 +32,18 @@
 	</div>
 </div>
 
-<div class="contents">
+<div class="contents cfx">
 
 <div class="pages">
-<noscript>JavaScriptを有効にしてください。</noscript>
+	<noscript><p>JavaScriptを有効にしてください。</p></noscript>
 </div>
+
+<div class="other">other</div>
 
 </div>
 
 <div class="footer">
-	<p>footer</p>
+	<p>フッター</p>
 </div>
 
 </div>
@@ -48,10 +51,15 @@
 <script type="text/x-jquery-tmpl" id="tmpl-page">
 <div class="page cfx">
 	<div class="meta">
-		<p class="count">${count}<br />tweets</p>
+		<p class="count tail"><a href="${search_url}"><b>${count}</b><br />tweets</a></p>
 	</div>
-	<h2><a href="${url}">${title}</a></h2>
-	<p class="text">${description}</p>
+	<div class="body cfx">
+		{{if thumb_url}}
+		<p class="thumb"><a href="${url}"><img src="${thumb_url}" width="80" /></a></p>
+		{{/if}}
+		<h2><a href="${url}">${title}</a></h2>
+		<p class="text">${description}</p>
+	</div>
 </div>
 </script>
 
@@ -59,7 +67,7 @@
 	<%= hidden_field_tag "cid", @cid %>
 	<%= hidden_field_tag "type", @type %>
 	<%= hidden_field_tag "last_id", "0" %>
-	<%= hidden_field_tag "interval", "10" %>
+	<%= hidden_field_tag "interval", "180" %>
 </form>
 
 </body>

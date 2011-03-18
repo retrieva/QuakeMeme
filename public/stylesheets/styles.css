@@ -1,24 +1,83 @@
-/*
+/*----------------------------------------------------------
  * styles.css
- */
+ *------------------------------------------------------- */
 
 body {
-	color: #333;
-	background: #eee;
+	margin: 0 40px;
 }
+
+:link, :visited {color: #07a; }
+:link:active, :visited:active,
+:link:hover, :visited:hover {color: #d40; }
+
+.wrapper {
+	margin: 0 auto;
+	max-width: 1500px;
+}
+
+/*
+ * headline
+ */
+
+.headline {
+	margin: 0;
+	padding: .25em 1em;
+	font-size: 85%;
+	background: #eee;
+	border-bottom: 1px solid #ddd;
+}
+
+/*
+ * logo
+ */
 
 h1 {
-	margin: 0;
-	padding: 5px 10px;
-	font-family: 'Yanone Kaffeesatz', serif;
-	font-size: 300%;
+	padding: .5em 1em;
+	border: 2px solid #c20;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	background: #e41;
 	color: #fff;
-	background: #369;
-	text-shadow: -1px -1px 1px #ccc;
+	font-family: 'Amaranth', serif;
+	font-style: italic;
+	letter-spacing: -.05em;
+	word-spacing: -.3em;
+	-webkit-transform: rotate(-5deg);
+	-moz-transform: rotate(-5deg);
+	-o-transform: rotate(-5deg);
+	transform: rotate(-5deg);
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
 }
 
+h1:before,
+h1:after {
+	border-width: 16px 6px 0 12px;
+	border-color: #c20 transparent;
+	bottom: -16px;
+	left: 16px;
+}
+
+h1:after {
+	border-color: #e41 transparent;
+	bottom: -13px;
+}
+
+/*
+ * nav
+ */
+
 .nav {
-	margin: 10px;
+	margin: 1em 0;
+	padding: 0 10px;
+	background: #aaa;
+	background-image: -moz-linear-gradient(#ddd 0%, #aaa 100%);
+	background-image: -webkit-linear-gradient(#ddd 0%, #aaa 100%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ddd), color-stop(1, #aaa));
+	background-image: linear-gradient(#ddd 0%, #aaa 100%);
+	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+	border: 1px solid #777;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 }
 
 .nav ul {
@@ -28,7 +87,7 @@ h1 {
 
 .nav ul li {
 	float: left;
-	margin-right: 10px;
+	margin-right: -1px;
 	position: relative;
 	width: 6em;
 }
@@ -38,7 +97,7 @@ h1 {
 	position: absolute;
 	top: 1.231em;
 	left: 0;
-	margin-top: 11px;
+	margin-top: 10px;
 }
 
 .nav ul li:hover ul {
@@ -50,10 +109,12 @@ h1 {
 }
 
 .nav a {
-	border: 1px solid #ccc;
+	text-align: center;
 	padding: 5px 10px;
 	display: inline-block;
-	background: #fff;
+	border: solid #777;
+	border-width: 0 1px;
+	color: #333;
 	width: 100%;
 	box-sizing: border-box;
 	-ms-box-sizing: border-box;
@@ -61,43 +122,137 @@ h1 {
 	-webkit-box-sizing: border-box;
 }
 
-.nav ul ul li a {
+.nav ul ul a {
+	background: #ccc;
+	border-width: 1px;
+	margin-bottom: -1px;
 }
 
-.contents {
-	margin: 10px;
-	border: 1px solid #ccc;
-	background: #fff;
+.nav a:hover,
+.nav ul ul a:hover {
+	background: #eee;
+	color: inherit;
+}
+
+/*
+ * pages
+ */
+
+.pages {
+	width: 55%;
+	float: left;
+}
+
+.loading {
+	height: 60px;
+	background-image: url("../images/loading.gif");
+	background-position: center center;
 }
 
 .page {
 	border-top: 1px dotted #ccc;
-	padding: 5px 10px;
+	padding: 20px 10px;
 }
 
 .page:first-child {
 	border-top: none;
 }
 
-.meta {
+.page .meta {
 	float: left;
-	width: 50px;
+	width: 4em;
 }
 
-.meta .count {
-	text-align: center;
+.page .meta .count {
+	margin: 0;
+	padding: .15em .5em;
 	background: #eee;
-	border: 1px solid #ccc;
+	border: 1px solid #bbb;
+	-moz-border-radius: 3px;
 	border-radius: 3px;
+	text-align: center;
+}
+
+.page .meta .count:before,
+.page .meta .count:after {
+	border-width: 8px 3px 0 6px;
+	border-color: #bbb transparent;
+	bottom: -8px;
+	left: 8px;
+}
+
+.page .meta .count:after {
+	border-color: #eee transparent;
+	bottom: -6px;
+}
+
+.page .body {
+	margin-left: 5em;
 }
 
 .page h2 {
-	margin: .5em 0;
+	margin-top: 0;
 }
 
-.page h2, .page .text {
-	margin-left: 60px;
+.page .thumb {
+	float: right;
+	margin: 0;
 }
+
+.page .thumb img {
+	margin: 0 6px 6px 0;
+	border: 3px solid;
+	padding: 3px;
+}
+
+
+/*
+ * other
+ */
+
+.other {
+	width: 40%;
+	float: right;
+}
+
+
+/*
+ * footer
+ */
+
+.footer {
+	margin-top: 1em;
+	border-top: 5px solid #ddd;
+	text-align: center;
+}
+
+
+/*----------------------------------------------------------
+ * classes
+ *------------------------------------------------------- */
+
+/*
+ * tail
+ */
+
+.tail {
+	display: inline-block;
+	position: relative;
+}
+
+.tail:before,
+.tail:after {
+	border-style: solid;
+	display: block;
+	position: absolute;
+	width: 0;
+	height: 0;
+	content: "";
+}
+
+/*
+ * clearfix
+ */
 
 .cfx:before,
 .cfx:after {
