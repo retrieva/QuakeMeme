@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'rubygems'
 require 'json'
 require 'uri'
@@ -8,8 +9,10 @@ require 'app/models/category'
 require 'app/models/page'
 require 'app/models/content'
 require 'mechanize'
-require 'hpricot'
+require 'nokogiri'
 require 'kconv'
+
+$KCODE = 'u' if RUBY_VERSION < '1.9.0'
 
 # Network
 def http_get(u)
@@ -130,7 +133,7 @@ end
 
 def extract_description(page)
   raw = page.parser.to_s
-  doc = Hpricot(raw)
+  doc = Nokogiri(raw)
 
   # 1: <meta name="description" ...>があればそれを用いる
   tmp = doc.search("//meta[@name='description']").first
