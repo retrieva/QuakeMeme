@@ -1,3 +1,4 @@
+require 'json'
 class Content < ActiveRecord::Base
   belongs_to :category
 
