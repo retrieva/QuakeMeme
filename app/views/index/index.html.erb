@@ -16,16 +16,25 @@
 
 <div class="header">
 	<p class="headline">QuakeMemeは、Twitterでのつぶやきを元に地震関連サイトをまとめています。</p>
-	<h1 class="tail">QuakeMeme</h1>
+	<h1 class="tail"><a href="/">QuakeMeme</a></h1>
 	<div class="nav">
 		<ul class="cfx"
 		<%- @cattree.each do |category| %>
 			><li><%= link_to category[:name], { :type => @type, :category => @category_to_s[category[:id]] } %>
-			<% if !category[:children].empty? %><ul>
+			<%- if !category[:children].empty? %>
+			<ul>
 				<%- category[:children].each do |category| %>
-				<li><%= link_to category[:name], { :type => @type, :category => @category_to_s[category[:id]] } %></li>
+				<li><%= link_to category[:name], { :type => @type, :category => @category_to_s[category[:id]] } %>			<%- if !category[:children].empty? %>
+				<ul>
+					<%- category[:children].each do |category| %>
+					<li><%= link_to category[:name], { :type => @type, :category => @category_to_s[category[:id]] } %></li>
+					<%- end %>
+				</ul>
 				<%- end %>
-			</ul><% end %>
+				</li>
+				<%- end %>
+			</ul>
+			<%- end %>
 			</li
 		<%- end %>
 		></ul>
@@ -34,11 +43,19 @@
 
 <div class="contents cfx">
 
-<div class="pages">
-	<noscript><p>JavaScriptを有効にしてください。</p></noscript>
+<div class="main">
+	<div class="pages">
+		<noscript><p>JavaScriptを有効にしてください。</p></noscript>
+	</div>
 </div>
 
-<div class="other">
+<div class="side">
+	<div class="section" id="about">
+		<h2>QuakeMemeとは</h2>
+		<p>QuakeMemeは、Twitterに投稿された地震関係のつぶやきを分析し、地震関連情報のサイトを整理します。</p>
+		<p>カテゴリごとに、カテゴリに関連するキーワードでツイートを全文検索し、カテゴリに含まれるサイトを特定しています。また、各カテゴリはつぶやき(Tweet)の数によってランキングが行われています。</p>
+		<p>現在、サービス品質の向上に向けて、信頼性の高いツイートのクロールや検索精度の向上に向けた改善を実装中です。</p>
+	</div>
 	<div class="section" id="donation">
 		<h2>義援金</h2>
 		<ul>
@@ -85,6 +102,7 @@
 		<p class="thumb"><a href="${url}"><img src="${thumb_url}" width="80" /></a></p>
 		{{/if}}
 		<h2><a href="${url}">${title}</a></h2>
+		<p class="domain"><a href="${url}">${domain}</a></p>
 		<p class="text">${description}</p>
 	</div>
 </div>
@@ -97,6 +115,20 @@
 	<%= hidden_field_tag "last_id", "0" %>
 	<%= hidden_field_tag "interval", "180" %>
 </form>
+
+<%- if RAILS_ENV == 'production' -%>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-22148761-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<%- end -%>
 
 </body>
 </html>

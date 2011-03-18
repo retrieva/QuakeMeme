@@ -37,6 +37,7 @@ var pages = {
 			if (json.pages.length) {
 				$.each(json.pages, function (i, page) {
 					page.search_url = 'http://search.twitter.com/search?' + $.param({ q: page.url });
+					page.domain = ((page.original_url || page.url).match(/\:\/\/([^\/]+)/) || [])[1] || '';
 					if (page.count > 200) {
 					//	page.thumb_url = 'http://img.simpleapi.net/small/' + page.url;
 					}
