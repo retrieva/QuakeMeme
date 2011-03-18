@@ -1,3 +1,3 @@
 class Category < ActiveRecord::Base
-  has_one :content
+  has_many :contents
 end
