@@ -8,6 +8,8 @@ require 'app/models/category'
 require 'app/models/page'
 require 'app/models/content'
 require 'mechanize'
+require 'hpricot'
+require 'kconv'
 
 # Network
 def http_get(u)
@@ -79,15 +81,9 @@ def html_get_page_title(url)
     timeout(5) do
       agent = Mechanize.new
       page = agent.get(url)
-      h['title'] = page.title
+      h['title'] = page.title.toutf8
       h['images'] = page.image_urls.to_json
-      if page.meta().empty?
-        desc = ''
-      else
-        desc = page.meta()['description']
-      end
-      desc = '' if desc.nil?
-      h['description'] = desc
+      h['description'] = extract_description(page)
       return h
     end
   rescue Timeout::Error
@@ -102,6 +98,7 @@ def add_page(url)
   u = Page.find(:first, :conditions => ["url = ?", url])
   return unless u.nil?
   h = html_get_page_title(url)
+  p "title: #{h.inspect}"
   return if h.empty?
   t = h['title']
 
@@ -113,6 +110,49 @@ def add_page(url)
   page.description = h['description']
   page.image_url = h['images'].to_json
   page.save
+end
+
+def extract_description(page)
+  raw = page.parser.to_s
+  doc = Hpricot(raw)
+
+  # 1: <meta name="description" ...>があればそれを用いる
+  tmp = doc.search("//meta[@name='description']").first
+  return footcutter(tmp["content"]) if tmp && tmp["content"]
+
+  # 2: <!-- google_ad_section_start(name=s1, weight=.9) --> <!-- google_ad_section_end -->で囲まれた箇所があればそれを用いる
+  reg = /<!-- ?google_ad_section_start ?(?:\([^)]*\)|) ?-->(.*?)<!-- ?google_ad_section_end ?(?:\([^)]*\)|) ?-->/m
+  tmp = []
+  tmp2 = raw
+  while tmp2.length > 0 do
+    tmp3 = reg.match(tmp2)
+    if tmp3
+      tmp.push(tmp3[1].gsub(/<.*?>/, ""))
+      tmp2 = tmp3.post_match
+    else
+      break
+    end
+  end
+  return footcutter(tmp.join("")) unless tmp.empty?
+
+  # 3: div.contents に囲まれた箇所があればそれを用いる
+  tmp = doc.search("//div[@class='contents']")
+  # 4: div.entry-body-text に囲まれた箇所があればそれを用いる
+  tmp = doc.search("//div[@class='entry-body-text']") if tmp.empty?
+  # 5: table#infobox に囲まれた箇所があればそれを用いる
+  tmp = doc.search("//table[@id='infobox']") if tmp.empty?
+  # 6: div.contents に囲まれた箇所があればそれを用いる
+  tmp = doc.search("//p").select{|a| a["class"] == "entry-content" || ["class"] == "2par" || (a["class"].nil? && a["id"].nil?)} if tmp.empty?
+  return footcutter(tmp.map{|a| a.to_s.gsub(/<.*?>/, "")}.join("")) unless tmp.empty?
+
+  # else: あきらめる
+  return ""
+end
+
+def footcutter(str, limit = 255)
+  ret = str.toutf8.gsub(/\s/, "").split(//)[0...limit].join("")
+  ret.gsub!(/<[^>]*$/, "")
+  ret
 end
 
 # Content
