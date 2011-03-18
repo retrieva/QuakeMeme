@@ -114,7 +114,6 @@ def add_page(url)
   u = Page.find(:first, :conditions => ["url = ?", url])
   return unless u.nil?
   h = html_get_page_title(url)
-  p "title: #{h.inspect}"
   return if h.empty?
   t = h['title']
 
@@ -126,6 +125,7 @@ def add_page(url)
   page.description = h['description']
   page.image_url = h['images']
   page.save
+  puts "found: #{url}"
 end
 
 def extract_description(page)
@@ -203,6 +203,5 @@ Category.all().each { |c|
     add_page(url)
   }
   add_content(c, 1, entries)
-  p Content.all()
-  p Page.all()
+  puts "crawled: #{c.name}"
 }
