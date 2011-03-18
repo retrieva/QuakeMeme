@@ -53,6 +53,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect ':isadmin/:controller/:action/:id',
     :requirements => {:isadmin => /admin/}
+
+  map.root :controller => 'index', :cid => 1, :type => 1
+  map.connect 'category/:cid/style/:type', :controller => 'index', :action => 'index'
+
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+
 end

@@ -19,10 +19,14 @@
 	<div class="nav">
 		<ul class="cfx">
 		<%- @cattree.each do |category| %>
-			<li><%= link_to category[:name], { :type => @type, :cid => category[:id] } %></a>
+			<li><%- if @type == 1 and category[:id] == 1 -%>
+				<%= link_to category[:name], { :type => 1, :cid => 1 } %>
+			    <%- else -%>
+				<%= link_to category[:name], { :type => @type_to_s[@type], :cid => @cid_to_s[category[:id]] } %>
+			    <%- end -%></a>
 			<% if !category[:children].empty? %><ul>
 				<%- category[:children].each do |category| %>
-				<li><%= link_to category[:name], { :type => @type, :cid => category[:id] } %></li>
+				<li><%= link_to category[:name], { :type => @type_to_s[@type], :cid => @cid_to_s[category[:id]] } %></li>
 				<%- end %>
 			</ul><% end %>
 			</li>
