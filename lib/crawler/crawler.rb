@@ -32,8 +32,20 @@ end
 
 # Sedue
 def sedue_get(w)
+  return {} if w.nil? or w.empty?
   # TODO: AND query
-  json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=(search:#{URI.encode(w)})?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000")
+  w_separated = w.to_s.split("|")
+  qstr = ""
+  i = 0
+  w_separated.each do |q|
+    if i == 0
+      qstr = "(search:#{URI.encode(q)})"
+    else
+      qstr = "(" + qstr + "|(search:#{URI.encode(q)}))"
+    end
+    i += 1
+  end
+  json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=#{qstr}?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000")
   JSON.parse(json)
 end
 
@@ -45,6 +57,7 @@ end
 def sedue_url_get(w)
   h = {}
   json = sedue_get(w)
+  return [] if json.nil? or json.empty?
   json['docs'].each { |d|
     URI.extract(d['fields']['text']).each { |u|
       next unless u.include?("http")
