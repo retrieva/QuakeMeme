@@ -3,6 +3,7 @@
  *------------------------------------------------------- */
 
 body {
+	background: #eee;
 	margin: 0 40px;
 }
 
@@ -23,8 +24,8 @@ body {
 	margin: 0;
 	padding: .25em 1em;
 	font-size: 85%;
-	background: #eee;
-	border-bottom: 1px solid #ddd;
+	background: #ddd;
+	border-bottom: 1px solid #ccc;
 }
 
 /*
@@ -139,8 +140,12 @@ h1:after {
  */
 
 .pages {
-	width: 55%;
+	width: 58%;
 	float: left;
+	background: #fff;
+	border: 1px solid #ccc;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 }
 
 .loading {
@@ -194,6 +199,11 @@ h1:after {
 	margin-top: 0;
 }
 
+.page .body p {
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
 .page .thumb {
 	float: right;
 	margin: 0;
@@ -215,6 +225,10 @@ h1:after {
 	float: right;
 }
 
+.other iframe {
+	width: 100%;
+	height: 400px;
+}
 
 /*
  * footer

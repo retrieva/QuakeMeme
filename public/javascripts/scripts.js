@@ -42,6 +42,7 @@ var pages = {
 			});
 			that.option('last_id', json.pages[0].id);
 		}).complete(function () {
+			$pages.find('.loading').remove();
 			that.updating = false;
 		});
 
