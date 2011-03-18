@@ -32,6 +32,10 @@ body {
  * logo
  */
 
+.header {
+	text-align: center;
+}
+
 h1 {
 	padding: .5em 1em;
 	border: 2px solid #c20;
@@ -139,13 +143,18 @@ h1:after {
  * pages
  */
 
-.pages {
-	width: 58%;
-	float: left;
+.pages,
+.other {
+	padding: 0 1%;
 	background: #fff;
 	border: 1px solid #ccc;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
+}
+
+.pages {
+	width: 56%;
+	float: left;
 }
 
 .loading {
@@ -221,13 +230,19 @@ h1:after {
  */
 
 .other {
-	width: 40%;
+	width: 38%;
 	float: right;
+}
+
+.other h2 {
+	margin-bottom: .5em;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #ccc;
 }
 
 .other iframe {
 	width: 100%;
-	height: 400px;
+	height: 280px;
 }
 
 /*
