@@ -1,0 +1,29 @@
+# You may add here your
+# server {
+#	...
+# }
+# statements for each of your virtual hosts
+
+upstream haproxy {
+  server ip-10-146-50-137.ap-northeast-1.compute.internal:8080;
+  server ip-10-146-113-123.ap-northeast-1.compute.internal:8080;
+}
+
+server {
+	listen   80;
+	server_name  localhost;
+
+	access_log  /var/log/nginx/localhost.access.log;
+
+	location / {
+              proxy_pass_header Server;
+              proxy_set_header Host $http_host;
+              proxy_redirect off;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Scheme $scheme;
+              proxy_max_temp_file_size 0;
+              proxy_read_timeout 60;
+              proxy_pass  http://haproxy;
+	}
+}

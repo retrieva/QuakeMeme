@@ -2,7 +2,7 @@
 
 # installing packages
 apt-get update
-apt-get install libxslt1-dev libxml2-dev mysql-server libmysqlclient15-dev memcached git-core emacs22 subversion screen
+apt-get install libxslt1-dev libxml2-dev mysql-server libmysqlclient15-dev memcached git-core emacs22 subversion screen nginx
 
 # gem install
 gem install rails -v=2.3.5
@@ -12,6 +12,10 @@ gem install mechanize
 gem install nokogiri
 gem install unicorn -v=1.1.2
 gem install mysql -v=2.8.1
+
+# nginx
+cp -f default /etc/nginx/sites-enabled/default
+cp -f nginx.conf /etc/nginx/
 
 # rubygem install
 wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.2.tgz
