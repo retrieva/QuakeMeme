@@ -16,16 +16,18 @@ def http_get(u)
   begin
     uri = URI.parse(u)
     http = Net::HTTP.new(uri.host, uri.port)
-    http.open_timeout = 30
-    http.read_timeout = 30
+    http.open_timeout = 60
+    http.read_timeout = 60
     http.start do |http_local|
       begin
         response = http_local.get(uri.path + "?" + uri.query)
         return response.body
-      rescue Errno::ETIMEDOUT, TimeoutError, Timeout::Error, Exception
+      rescue Errno::ETIMEDOUT, TimeoutError, Timeout::Error, Exception => e
+        p e
       end
     end
-  rescue Errno::ETIMEDOUT, TimeoutError, Timeout::Error, Exception
+  rescue Errno::ETIMEDOUT, TimeoutError, Timeout::Error, Exception => e
+    p e
   end
   return ''
 end
@@ -39,12 +41,13 @@ def sedue_get(w)
   i = 0
   w_separated.each do |q|
     if i == 0
-      qstr = "(search:#{URI.encode(q)})"
+      qstr = "(search:#{q})"
     else
-      qstr = "(" + qstr + "|(search:#{URI.encode(q)}))"
+      qstr = "(" + qstr + "|(search:#{q}))"
     end
     i += 1
   end
+  qstr = URI.encode(qstr)
   json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=#{qstr}?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000")
   JSON.parse(json)
 end
