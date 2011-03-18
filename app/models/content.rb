@@ -24,7 +24,7 @@ class Content < ActiveRecord::Base
           :id => page.id,
           :title => page.title || "",
           :description => page.description || "",
-          :image_url => JSON.parse(page.image_url || "[]"),
+          :image_url => JSON.parse(page.image_url.gsub(/\\/, "").gsub(/"\[/, "[").gsub(/\]"/, "]") || "[]"),
         }
         ret[:pages].push(tmp)
       end
