@@ -5,7 +5,7 @@
 var pages = {
 	update_tid: null,
 	update_sec: null,
-	update_url: 'http://ec2-175-41-160-220.ap-southeast-1.compute.amazonaws.com/api/get_contents?cid=1&type=1&callback=?',
+	update_url: 'http://ec2-175-41-160-220.ap-southeast-1.compute.amazonaws.com/api/get_contents?callback=?',
 	updating: false,
 	update: function (force) {
 		if (this.updating) {
@@ -22,13 +22,16 @@ var pages = {
 		$pages.append($('<div>').addClass('loading'));
 
 		var that = this;
-		$.getJSON(this.update_url, function (json) {
+		$.getJSON(this.update_url, {
+			cid: this.option('cid'),
+			type: this.option('type')
+		}, function (json) {
 			$pages.find('.loading').remove();
 			var $tmpl_page = $('#tmpl-page'),
 			    last_id = that.option('last_id');
 			$.each(json.pages, function (i, page) {
 				page.search_url = 'http://search.twitter.com/search?' + $.param({ q: page.url });
-				//page.thumb_url = page.image_url.length ? page.image_url[0] : null;
+				// page.thumb_url = page.image_url.length ? page.image_url[page.image_url.length - 1] : null;
 				var $page = $tmpl_page.tmpl(page);
 				if (!$first.length) {
 					$page.appendTo('.pages');
