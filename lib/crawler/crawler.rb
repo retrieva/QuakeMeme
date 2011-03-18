@@ -33,7 +33,18 @@ end
 # Sedue
 def sedue_get(w)
   # TODO: AND query
-  json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=(search:#{URI.encode(w)})?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000")
+  w_separated = w.split("|")
+  qstr = ""
+  i = 0
+  w_separated.each do |q|
+    if i == 0
+      qstr = "(search:#{URI.encode(q)})"
+    else
+      qstr = "(" + qstr + "|(search:#{URI.encode(q)}))"
+    end
+    i += 1
+  end
+  json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=#{qstr}?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000")
   JSON.parse(json)
 end
 
@@ -108,6 +119,7 @@ def add_page(url)
   page.alive = (not (t.nil? or t.empty?))
   page.title = t
   page.description = h['description']
+
   page.image_url = h['images'].to_json
   page.save
 end
