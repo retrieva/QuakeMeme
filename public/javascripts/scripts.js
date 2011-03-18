@@ -3,9 +3,14 @@
  */
 
 var pages = {
+	// アップデートタイマー
 	update_tid: null,
+	// アップデートインターバル
 	update_sec: null,
-	update_url: 'http://ec2-175-41-160-220.ap-southeast-1.compute.amazonaws.com/api/get_contents?callback=?',
+	// アップデートURL
+	update_url: null,
+
+	// アップデート中
 	updating: false,
 	update: function (force) {
 		if (this.updating) {
@@ -31,6 +36,9 @@ var pages = {
 			    last_id = that.option('last_id');
 			$.each(json.pages, function (i, page) {
 				page.search_url = 'http://search.twitter.com/search?' + $.param({ q: page.url });
+				if (page.count > 200) {
+					//page.thumb_url = 'http://img.simpleapi.net/small/' + page.url;
+				}
 				// page.thumb_url = page.image_url.length ? page.image_url[page.image_url.length - 1] : null;
 				var $page = $tmpl_page.tmpl(page);
 				if (!$first.length) {
@@ -76,6 +84,9 @@ var pages = {
 $(function ($) {
 
 	pages.update_sec = pages.option('interval') || 60;
+	pages.update_url = pages.option('contents_url');
+
+	if (!pages.update_url) return;
 
 	pages.update(true);
 	pages.update_init();

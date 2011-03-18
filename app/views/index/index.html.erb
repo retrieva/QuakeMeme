@@ -93,6 +93,7 @@
 <form name="options" style="display:none">
 	<%= hidden_field_tag "cid", @cid %>
 	<%= hidden_field_tag "type", @type %>
+	<%= hidden_field_tag "contents_url", "/api/get_contents" %>
 	<%= hidden_field_tag "last_id", "0" %>
 	<%= hidden_field_tag "interval", "180" %>
 </form>
