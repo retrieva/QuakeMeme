@@ -169,7 +169,7 @@ def extract_description(page)
 end
 
 def footcutter(str, limit = 255)
-  ret = str.toutf8.gsub(/\s/, "").split(//)[0...limit].join("")
+  ret = str.toutf8.split(//)[0...limit].join("")
   ret.gsub!(/<[^>]*$/, "")
   ret
 end
