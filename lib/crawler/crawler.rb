@@ -33,7 +33,7 @@ end
 # Sedue
 def sedue_get(w)
   # TODO: AND query
-  w_separated = w.split("|")
+  w_separated = w.to_s.split("|")
   qstr = ""
   i = 0
   w_separated.each do |q|
