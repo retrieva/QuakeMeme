@@ -2,7 +2,7 @@
 
 # installing packages
 apt-get update
-apt-get install libxslt1-dev libxml2-dev mysql-server libmysqlclient15-dev memcached git-core emacs22 subversion screen nginx
+apt-get install libxslt1-dev libxml2-dev mysql-server libmysqlclient15-dev memcached git-core emacs22 subversion screen nginx rdoc
 
 # gem install
 gem install rails -v=2.3.5
