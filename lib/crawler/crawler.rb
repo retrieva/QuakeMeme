@@ -84,21 +84,34 @@ def sedue_url_get(w)
 end
 
 # HTML/HTTP
-def html_get_page_title(url)
+def html_analyze(url)
   h = {}
   begin
     timeout(30) do
       agent = Mechanize.new
       page = agent.get(url)
-      h['title'] = page.title.toutf8
-      h['images'] = page.image_urls.to_json
-      h['description'] = extract_description(page)
+      if page.class == Mechanize::Page
+        h['title'] = page.title.toutf8
+        h['images'] = page.image_urls[0..2].to_json
+        h['description'] = extract_description(page)
+      elsif page.class == Mechanize::File
+        return { 'spam' => true } if page.code == 404
+        h['title'] = page.filename
+        h['images'] = "[]"
+        h['description'] = ""
+      end
+      p h
       return h
     end
-  rescue Timeout::Error
-    return {}
-  rescue
-    return {}
+  rescue Mechanize::ResponseCodeError => e
+    p e
+    return { 'spam' => true }
+  rescue Timeout::Error => e
+    p e
+    return { 'spam' => false }
+  rescue => e
+    p e
+    return { 'spam' => true }
   end
 end
 
@@ -132,10 +145,14 @@ end
 # Page
 def set_page_contents(page)
   url = page.url
-  h = html_get_page_title(url)
-  return if h.empty?
-  t = h['title']
+  h = html_analyze(url)
+  if h.has_key? 'spam'
+    page.spam = h['spam']
+    puts "spam!: #{url}"
+    return
+  end
 
+  t = h['title']
   page.alive = (not (t.nil? or t.empty?))
   page.title = t
   page.description = h['description']
@@ -145,13 +162,14 @@ end
 
 def add_page(url)
   url = url.strip
+  return if url.nil? or url.empty?
   u = Page.find(:first, :conditions => ["url = ?", url])
   return unless u.nil?
 
   page = Page.new
   page.url = url
-  set_page_contents(page)
   page.spam = 0
+  set_page_contents(page)
   page.save!
   puts "found: #{url}: #{page.original_url}"
 end
