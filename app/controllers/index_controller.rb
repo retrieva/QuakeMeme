@@ -6,6 +6,7 @@ class IndexController < ApplicationController
     @cattree = []
     id_to_index = {}
     id_to_index2 = {}
+    id_to_obj = {}
     categories.each do |category|
       cid = category.id
       pid = category.parent_cid
@@ -15,6 +16,7 @@ class IndexController < ApplicationController
         :ascii_name => category.ascii_name,
         :children => [],
       }
+      id_to_obj[cid] = obj
       # 親
       if pid == 0
         id_to_index[cid] = @cattree.length
@@ -42,6 +44,7 @@ class IndexController < ApplicationController
       @cid = 1
     end
     @type = params[:type].to_i
+    @current_title = id_to_obj[@cid].name
 
   end
 end

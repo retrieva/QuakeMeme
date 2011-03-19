@@ -16,6 +16,12 @@ body {
 	max-width: 1500px;
 }
 
+h2 {
+	margin-bottom: .5em;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #ccc;
+}
+
 /*
  * headline
  */
@@ -230,7 +236,7 @@ h1:after {
 	margin-left: 5em;
 }
 
-.page h2 {
+.page h3 {
 	margin: 0;
 }
 
@@ -260,15 +266,13 @@ h1:after {
 	float: right;
 }
 
-.side h2 {
-	margin-bottom: .5em;
-	padding-bottom: 5px;
-	border-bottom: 1px dotted #ccc;
-}
-
-.side iframe {
+.side #outside-bujime iframe {
 	width: 100%;
 	height: 280px;
+}
+
+.side #outside-googlepersonfinder iframe {
+	width: 100%;
 }
 
 /*

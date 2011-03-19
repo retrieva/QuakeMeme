@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>QuakeMeme</title>
+<title><% if @cid != 1 %><%=h @current_title %> | <% end %>QuakeMeme</title>
 <%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Amaranth:regular", :media => "all" %>
 <%= stylesheet_link_tag "x.min.css", :media => "all" %>
 <%= stylesheet_link_tag "styles.css", :media => "all" %>
@@ -44,6 +44,7 @@
 <div class="contents cfx">
 
 <div class="main">
+	<h2><%=h @current_title %></h2>
 	<div class="pages">
 		<noscript><p>JavaScriptを有効にしてください。</p></noscript>
 	</div>
@@ -55,6 +56,7 @@
 		<p>QuakeMemeは、Twitterに投稿された地震関係のつぶやきを分析し、地震関連情報のサイトを整理します。</p>
 		<p>カテゴリごとに、カテゴリに関連するキーワードでツイートを全文検索し、カテゴリに含まれるサイトを特定しています。また、各カテゴリはつぶやき(Tweet)の数によってランキングが行われています。</p>
 		<p>現在、サービス品質の向上に向けて、信頼性の高いツイートのクロールや検索精度の向上に向けた改善を実装中です。</p>
+		<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fquakememe.jp%2F&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=like&amp;font&amp;colorscheme=light&amp;height=80" scrolling="no" frameborder="0" style="border:none;overflow:hidden;width:450px;height:24px;" allowTransparency="true"></iframe>
 	</div>
 	<div class="section" id="donation">
 		<h2>義援金</h2>
@@ -101,9 +103,11 @@
 		{{if thumb_url}}
 		<p class="thumb"><a href="${url}"><img src="${thumb_url}" width="80" /></a></p>
 		{{/if}}
-		<h2><a href="${url}">${title}</a></h2>
+		<h3><a href="${url}">${title}</a></h3>
 		<p class="domain"><a href="${url}">${domain}</a></p>
+		{{if description}}
 		<p class="text">${description}</p>
+		{{/if}}
 	</div>
 </div>
 </script>
