@@ -249,6 +249,11 @@ h1:after {
 	margin: 0;
 }
 
+.page h3 img {
+	margin-right: .25em;
+	vertical-align: baseline;
+}
+
 .page .body p {
 	word-wrap: break-word;
 	word-break: break-all;
