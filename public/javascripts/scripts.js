@@ -52,7 +52,7 @@ var pages = {
 				// ツイートボタン
 				var tweet_data = {
 					url: page.url,
-					via: 'http://quakememe.jp/ #quakememe',
+					via: 'quakememe http://quakememe.jp/',
 					lang: 'ja'
 				};
 				if (page.title !== page.url) {
