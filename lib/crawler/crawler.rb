@@ -14,6 +14,8 @@ require 'kconv'
 require 'lib/crawler/extractcontent'
 
 $KCODE = 'u' if RUBY_VERSION < '1.9.0'
+$TYPE_ALL = 1
+$TYPE_ONE_HOUR = 2
 
 # Network
 def http_get(u)
@@ -37,7 +39,7 @@ def http_get(u)
 end
 
 # Sedue
-def sedue_get(w)
+def sedue_get(w, type)
   return {} if w.nil? or w.empty?
   # TODO: AND query
   w_separated = w.to_s.split("|")
@@ -51,8 +53,14 @@ def sedue_get(w)
     end
     i += 1
   end
+  qstr = qstr + "?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000"
+  if type == $TYPE_ONE_HOUR
+    qstr = qstr + "?time>=#{Time.now.to_i - 3600}"
+  end
   qstr = URI.encode(qstr)
-  json = http_get("http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=#{qstr}?get=id,user,text,hashtags?sort=time:desc?from=0?to=10000")
+  url = "http://ec2-175-41-197-12.ap-northeast-1.compute.amazonaws.com/?format=json&q=#{qstr}"
+  puts url
+  json = http_get(url)
   JSON.parse(json)
 end
 
@@ -61,9 +69,9 @@ def url_normalize(u)
   u
 end
 
-def sedue_url_get(w)
+def sedue_url_get(w, type)
   h = {}
-  json = sedue_get(w)
+  json = sedue_get(w, type)
   return [] if json.nil? or json.empty?
   json['docs'].each { |d|
     URI.extract(d['fields']['text']).each { |u|
@@ -226,14 +234,16 @@ end
 def inner_crawl_category(cs)
   cs.each { |c|
     # [[count, url], [count, url], ...]
-    entries = sedue_url_get(c.query)[0..29]
-    entries.each { |e|
-      cnt = e[0]
-      url = e[1]
-      add_page(url)
+    [$TYPE_ALL, $TYPE_ONE_HOUR].each { |type|
+      entries = sedue_url_get(c.query, type)[0..29]
+      entries.each { |e|
+        cnt = e[0]
+        url = e[1]
+        add_page(url)
+      }
+      add_content(c, type, entries)
+      puts "crawled: type=#{type}, name=#{c.name}"
     }
-    add_content(c, 1, entries)
-    puts "crawled: #{c.name}"
   }
 end
 
