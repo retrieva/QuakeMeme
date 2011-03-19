@@ -47,6 +47,18 @@ var pages = {
 			$.each(json.pages, function (i, page) {
 				page.original_url = page.original_url || page.url;
 
+				// タイトルが空の場合
+				page.title = page.title || page.url;
+				// ツイートボタン
+				var tweet_data = {
+					url: page.url,
+					via: 'http://quakememe.jp/ #quakememe',
+					lang: 'ja'
+				};
+				if (page.title !== page.url) {
+					tweet_data.text = page.title;
+				}
+				page.tweet_url = 'http://twitter.com/share?' + $.param(tweet_data);
 				// 検索用リンクの生成
 				page.search_url = 'http://search.twitter.com/search?' + $.param({ q: page.url });
 				// ドメイン部分の抽出
@@ -68,6 +80,8 @@ var pages = {
 			});
 
 			that.option('last_id', json.pages[0].id);
+
+			$.getScript('http://platform.twitter.com/widgets.js');
 		}).error(function (xhr, msg) {
 			if (msg === 'error' && xhr.status === 404) {
 				$('<p>').addClass('notfound').text('このカテゴリのウェブページはまだありません。').appendTo('.pages');
@@ -203,5 +217,15 @@ $(function ($) {
 
 	pages.update(true);
 	pages.update_sec && pages.update_init();
+
+	$('.page .meta .share a').live('click', function () {
+		var w = 550, h = 450, sw = screen.width, sh = screen.height,
+		    x = Math.round((sw / 2) - (w / 2)), y = sh > h ? Math.round((sh / 2) - (h / 2)) : 0;
+		var d = window.open(this.href, 'twitter_tweet', 'left=' + x + ',top=' + y + ',width=' + w + ',height=' + h + ',personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+		if (d) {
+			d.focus();
+			return false;
+		}
+	});
 
 });

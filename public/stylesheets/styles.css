@@ -206,17 +206,21 @@ h1:after {
 
 .page .meta {
 	float: left;
-	width: 4em;
+	width: 4.5em;
 }
 
-.page .meta .count {
-	margin: 0;
-	padding: .15em .5em;
-	background: #eee;
-	border: 1px solid #bbb;
+.page .meta .count,
+.page .meta .share {
+	margin: 0 0 10px;
+	width: 100%;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	text-align: center;
+}
+
+.page .meta .count {
+	background: #eee;
+	border: 1px solid #bbb;
 }
 
 .page .meta .count:before,
@@ -232,8 +236,13 @@ h1:after {
 	bottom: -6px;
 }
 
+.page .meta .share {
+	background: #def;
+	border: 1px solid #9ce;
+}
+
 .page .body {
-	margin-left: 5em;
+	margin-left: 6em;
 }
 
 .page h3 {
