@@ -112,7 +112,7 @@ def html_get_page_title(url)
   end
 end
 
-def expand_url(u)
+def expand_url(orig_u)
   def expand_url_inner(url)
     uri = url.kind_of?(URI) ? url : URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
@@ -127,6 +127,7 @@ def expand_url(u)
       return ''
     end
   end
+  u = orig_u
   nretries = 0
   expanded = expand_url_inner(u)
   while (expanded != u && nretries <= 3)
@@ -135,7 +136,7 @@ def expand_url(u)
     expanded = expand_url_inner(u)
     nretries = nretries + 1
   end
-  return expanded
+  return (expanded.nil? or expanded.empty? or (not expanded.include?("http"))) ? orig_u : expanded
 end
 
 # Page
@@ -259,7 +260,7 @@ def usage
   puts <<END
 Usage:
   crawler.rb crawl_category
-  crawler.rb crawl_url
+  crawler.rb crawl_page
 END
   exit
 end
