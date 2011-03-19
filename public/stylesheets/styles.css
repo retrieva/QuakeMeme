@@ -264,12 +264,31 @@ h1:after {
 	margin: 0;
 }
 
-.page .thumb img {
+.page .thumb a {
 	margin: 0 0 6px 6px;
-	border: 3px solid;
 	padding: 3px;
+	border: 3px solid;
+	display: inline-block;
+	position: relative;
 }
 
+.page .thumb img {
+	width: 80px;
+}
+
+.page .thumb-www-jma-go-jp a {
+	width: 80px;
+	height: 80px;
+}
+
+.page .thumb-www-jma-go-jp img {
+	position: absolute;
+	top: 0;
+	left: -57px;
+	width: 171px;
+	height: 140px;
+	clip: rect(3px 140px 83px 60px);
+}
 
 /*
  * side

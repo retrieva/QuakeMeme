@@ -65,6 +65,7 @@ var pages = {
 				page.domain = (page.original_url.match(/\:\/\/([^\/]+)/) || [])[1] || '';
 				// 画像用URLの生成
 				page.thumb_url = that.get_thumb(page.original_url);
+				page.thumb_class = 'thumb-' + page.domain.replace(/\./g, '-');
 
 				if (page.count > 200) {
 				//	page.thumb_url = 'http://img.simpleapi.net/small/' + page.url;
@@ -80,8 +81,6 @@ var pages = {
 			});
 
 			that.option('last_id', json.pages[0].id);
-
-			$.getScript('http://platform.twitter.com/widgets.js');
 		}).error(function (xhr, msg) {
 			if (msg === 'error' && xhr.status === 404) {
 				$('<p>').addClass('notfound').text('このカテゴリのウェブページはまだありません。').appendTo('.pages');
