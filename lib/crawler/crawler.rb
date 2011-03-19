@@ -19,8 +19,8 @@ def http_get(u)
   begin
     uri = URI.parse(u)
     http = Net::HTTP.new(uri.host, uri.port)
-    http.open_timeout = 60
-    http.read_timeout = 60
+    http.open_timeout = 120
+    http.read_timeout = 120
     http.start do |http_local|
       begin
         response = http_local.get(uri.path + "?" + uri.query)
@@ -145,7 +145,6 @@ def set_page_contents(page, url)
   t = h['title']
 
   page.url = url
-  page.spam = 0
   page.alive = (not (t.nil? or t.empty?))
   page.title = t
   page.description = h['description']
@@ -159,6 +158,7 @@ def add_page(url)
 
   page = Page.new
   set_page_contents(page, url)
+  page.spam = 0
   page.save
   puts "found: #{url}: #{page.original_url}"
 end
