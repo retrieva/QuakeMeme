@@ -226,15 +226,8 @@ def add_content(category, content_type, entries)
 end
 
 # Category
-def crawl_category
-  if Category.all().empty?
-    c = Category.new
-    c.name = "Home"
-    c.query = "http"
-    c.save()
-  end
-  p Page.all().length
-  Category.all().each { |c|
+def inner_crawl_category(cs)
+  cs.each { |c|
     # [[count, url], [count, url], ...]
     entries = sedue_url_get(c.query)[0..29]
     entries.each { |e|
@@ -245,6 +238,22 @@ def crawl_category
     add_content(c, 1, entries)
     puts "crawled: #{c.name}"
   }
+end
+
+def crawl_top_category
+  cs = Category.find(:all, :conditions => ["parent_cid = ?", 0])
+  inner_crawl_category(cs)
+end
+
+def crawl_category
+  if Category.all().empty?
+    c = Category.new
+    c.name = "Home"
+    c.query = "http"
+    c.save()
+  end
+  p Page.all().length
+  inner_crawl_category(Category.all())
 end
 
 # Page
@@ -263,6 +272,7 @@ def usage
   puts <<END
 Usage:
   crawler.rb crawl_category
+  crawler.rb crawl_top_category
   crawler.rb crawl_page
 END
   exit
@@ -272,6 +282,8 @@ usage if ARGV.length != 1
 p ARGV
 if ARGV[0] == "crawl_category"
   crawl_category
+elsif ARGV[0] == "crawl_top_category"
+  crawl_top_category
 elsif ARGV[0] == "crawl_page"
   crawl_page
 else
