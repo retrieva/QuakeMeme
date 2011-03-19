@@ -110,6 +110,9 @@ var pages = {
 	// サムネイルの取得
 	get_thumb: function (url) {
 		var m;
+		if (m = /http:\/\/www\.jma\.go\.jp\/jp\/quake\/(\d+-\d+)\.html/.exec(url)) {
+			return 'http://www.jma.go.jp/jp/quake/images/japan/' + m[1] + '.png';
+		}
 		if (m = /^http:\/\/twitpic\.com\/(\w+)/.exec(url)) {
 			return 'http://twitpic.com/show/thumb/' + m[1];
 		}
