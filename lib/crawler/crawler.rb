@@ -93,11 +93,11 @@ ActiveRecord::Base.establish_connection(
   :encoding => "utf8",
   :timeout  => 5000)
 
-# HTML
+# HTML/HTTP
 def html_get_page_title(url)
   h = {}
   begin
-    timeout(5) do
+    timeout(30) do
       agent = Mechanize.new
       page = agent.get(url)
       h['title'] = page.title.toutf8
@@ -112,23 +112,55 @@ def html_get_page_title(url)
   end
 end
 
+def expand_url(u)
+  def expand_url_inner(url)
+    uri = url.kind_of?(URI) ? url : URI.parse(url)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.open_timeout = 60
+    http.read_timeout = 60
+    begin
+      http.start { |io|
+        r = io.head(uri.path)
+        return r['Location'] || uri.to_s
+      }
+    rescue Errno::ETIMEDOUT, TimeoutError, Timeout::Error, Exception => e
+      return ''
+    end
+  end
+  nretries = 0
+  expanded = expand_url_inner(u)
+  while (expanded != u && nretries <= 3)
+    return u if expanded.empty?
+    u = expanded
+    expanded = expand_url_inner(u)
+    nretries = nretries + 1
+  end
+  return expanded
+end
+
 # Page
-def add_page(url)
-  u = Page.find(:first, :conditions => ["url = ?", url])
-  return unless u.nil?
+def set_page_contents(page, url)
   h = html_get_page_title(url)
   return if h.empty?
   t = h['title']
 
-  page = Page.new
   page.url = url
   page.spam = 0
   page.alive = (not (t.nil? or t.empty?))
   page.title = t
   page.description = h['description']
   page.image_url = h['images']
+  page.original_url = expand_url(url)
+end
+
+def add_page(url)
+  u = Page.find(:first, :conditions => ["url = ?", url])
+  return unless u.nil?
+
+  page = Page.new
+  set_page_contents(page, url)
   page.save
-  puts "found: #{url}"
+  puts "found: #{url}: #{page.original_url}"
 end
 
 def extract_description(page)
@@ -191,20 +223,53 @@ def add_content(category, content_type, entries)
 end
 
 # Category
-if Category.all().empty?
-  c = Category.new
-  c.name = "Home"
-  c.query = "http"
-  c.save()
-end
-Category.all().each { |c|
-  # [[count, url], [count, url], ...]
-  entries = sedue_url_get(c.query)[0..29]
-  entries.each { |e|
-    cnt = e[0]
-    url = e[1]
-    add_page(url)
+def crawl_category
+  if Category.all().empty?
+    c = Category.new
+    c.name = "Home"
+    c.query = "http"
+    c.save()
+  end
+  Category.all().each { |c|
+    # [[count, url], [count, url], ...]
+    entries = sedue_url_get(c.query)[0..29]
+    entries.each { |e|
+      cnt = e[0]
+      url = e[1]
+      add_page(url)
+    }
+    add_content(c, 1, entries)
+    puts "crawled: #{c.name}"
   }
-  add_content(c, 1, entries)
-  puts "crawled: #{c.name}"
-}
+end
+
+# Page
+def crawl_page
+  p Page.all().length
+  Page.all().each { |p|
+    set_page_contents(p, p.url)
+    p.save!
+    puts "found: #{p.url}: #{p.original_url}"
+  }
+  p Page.all().length
+end
+
+# main
+def usage
+  puts <<END
+Usage:
+  crawler.rb crawl_category
+  crawler.rb crawl_url
+END
+  exit
+end
+
+usage if ARGV.length != 1
+p ARGV
+if ARGV[0] == "crawl_category"
+  crawl_category
+elsif ARGV[0] == "crawl_page"
+  crawl_page
+else
+  usage
+end
