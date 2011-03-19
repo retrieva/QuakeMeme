@@ -140,12 +140,12 @@ def expand_url(orig_u)
 end
 
 # Page
-def set_page_contents(page, url)
+def set_page_contents(page)
+  url = page.url
   h = html_get_page_title(url)
   return if h.empty?
   t = h['title']
 
-  page.url = url
   page.alive = (not (t.nil? or t.empty?))
   page.title = t
   page.description = h['description']
@@ -154,13 +154,15 @@ def set_page_contents(page, url)
 end
 
 def add_page(url)
+  url = url.strip
   u = Page.find(:first, :conditions => ["url = ?", url])
   return unless u.nil?
 
   page = Page.new
-  set_page_contents(page, url)
+  page.url = url
+  set_page_contents(page)
   page.spam = 0
-  page.save
+  page.save!
   puts "found: #{url}: #{page.original_url}"
 end
 
@@ -231,6 +233,7 @@ def crawl_category
     c.query = "http"
     c.save()
   end
+  p Page.all().length
   Category.all().each { |c|
     # [[count, url], [count, url], ...]
     entries = sedue_url_get(c.query)[0..29]
@@ -248,7 +251,7 @@ end
 def crawl_page
   p Page.all().length
   Page.all().each { |p|
-    set_page_contents(p, p.url)
+    set_page_contents(p)
     p.save!
     puts "found: #{p.url}: #{p.original_url}"
   }
