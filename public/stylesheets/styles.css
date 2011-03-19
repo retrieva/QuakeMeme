@@ -31,7 +31,7 @@ body {
 }
 
 h1, h2 {
-	background: #e41;
+	background: #14e;
 	color: #fff;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
 }
@@ -42,7 +42,7 @@ h1, dfn {
 }
 
 h2 {
-	border: 1px solid #e41;
+	border: 1px solid #14e;
 	margin: 0.862em 0;
 	padding: 0.25em 0.5em;
 	font-size: 116%;
@@ -141,7 +141,7 @@ h2 {
 h1 {
 	margin: 20px 0 30px;
 	padding: .5em 1em;
-	border: 2px solid #c20;
+	border: 2px solid #02c;
 	-moz-border-radius: 8px;
 	border-radius: 8px;
 	letter-spacing: -.05em;
@@ -159,26 +159,26 @@ h1 :link:active, h1 :visited:active,
 h1 :link:hover, h1 :visited:hover {
 	color: inherit;
 	text-decoration: none;
-	text-shadow: 0 -1px 0    #e41,
-	             0  1px 0    #e41,
-	             -1px 0 0    #e41,
-	              1px 0 0    #e41,
-	             0 -1px 10px #ffc,
-	             0  1px 10px #ffc,
-	             -1px 0 10px #ffc,
-	              1px 0 10px #ffc;
+	text-shadow: 0 -1px 0    #14e,
+	             0  1px 0    #14e,
+	             -1px 0 0    #14e,
+	              1px 0 0    #14e,
+	             0 -1px 10px #cff,
+	             0  1px 10px #cff,
+	             -1px 0 10px #cff,
+	              1px 0 10px #cff;
 }
 
 h1:before,
 h1:after {
 	border-width: 16px 6px 0 12px;
-	border-color: #c20 transparent;
+	border-color: #02c transparent;
 	bottom: -16px;
 	left: 16px;
 }
 
 h1:after {
-	border-color: #e41 transparent;
+	border-color: #14e transparent;
 	bottom: -13px;
 }
 
@@ -333,28 +333,27 @@ h1:after {
 	text-align: center;
 }
 
-.page .meta .count :link {
+.page .meta .count :link,
+.page .meta .count :visited {
 	border: 1px solid #bbb;
 	background: #eee;
-	color: inherit;
+	color: #555;
 }
 
 .page .meta .count :link:before,
-.page .meta .count :link:after {
+.page .meta .count :visited:before,
+.page .meta .count :link:after,
+.page .meta .count :visited:after {
 	border-width: 8px 3px 0 6px;
 	border-color: #bbb transparent;
 	bottom: -8px;
 	left: 8px;
 }
 
-.page .meta .count :link:after {
+.page .meta .count :link:after,
+.page .meta .count :visited:after {
 	border-color: #eee transparent;
 	bottom: -6px;
-}
-
-.page .meta .count :link,
-.page .meta .count :visited {
-	color: #555;
 }
 
 .page .meta .count :link:hover,
@@ -367,12 +366,16 @@ h1:after {
 }
 
 .page .meta .count :link:hover:before,
-.page .meta .count :link:active:before {
+.page .meta .count :visited:hover:before,
+.page .meta .count :link:active:before,
+.page .meta .count :visited:active:before {
 	border-color: #999 transparent;
 }
 
 .page .meta .count :link:hover:after,
-.page .meta .count :link:active:after {
+.page .meta .count :visited:hover:after,
+.page .meta .count :link:active:after
+.page .meta .count :visited:active:after {
 	border-color: #fff transparent;
 }
 
