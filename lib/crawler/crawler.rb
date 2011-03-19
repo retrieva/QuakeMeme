@@ -83,16 +83,6 @@ def sedue_url_get(w)
   return a
 end
 
-# Database
-ActiveRecord::Base.establish_connection(
-#:adapter  => "sqlite3",
-#:database => "db/development.sqlite3",
-  :adapter  => "mysql",
-  :database => "quakememe_production",
-  :user => "root",
-  :encoding => "utf8",
-  :timeout  => 5000)
-
 # HTML/HTTP
 def html_get_page_title(url)
   h = {}
@@ -271,20 +261,40 @@ end
 def usage
   puts <<END
 Usage:
-  crawler.rb crawl_category
-  crawler.rb crawl_top_category
-  crawler.rb crawl_page
+  crawler.rb RAILS_ENV crawl_category
+  crawler.rb RAILS_ENV crawl_top_category
+  crawler.rb RAILS_ENV crawl_page
 END
   exit
 end
 
-usage if ARGV.length != 1
+usage if ARGV.length != 2
 p ARGV
-if ARGV[0] == "crawl_category"
+
+rails_env = ARGV[0]
+if rails_env == "development"
+  ActiveRecord::Base.establish_connection(
+   :adapter  => "sqlite3",
+   :database => "db/development.sqlite3",
+   :encoding => "utf8",
+   :timeout  => 5000)
+elsif rails_env == "production"
+  ActiveRecord::Base.establish_connection(
+   :adapter  => "mysql",
+   :database => "quakememe_production",
+   :user => "root",
+   :encoding => "utf8",
+   :timeout  => 5000)
+else
+  usage
+end
+
+cmd = ARGV[1]
+if cmd == "crawl_category"
   crawl_category
-elsif ARGV[0] == "crawl_top_category"
+elsif cmd == "crawl_top_category"
   crawl_top_category
-elsif ARGV[0] == "crawl_page"
+elsif cmd == "crawl_page"
   crawl_page
 else
   usage
