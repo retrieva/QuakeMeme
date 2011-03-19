@@ -44,7 +44,7 @@ class IndexController < ApplicationController
       @cid = 1
     end
     @type = params[:type].to_i
-    @current_title = id_to_obj[@cid].name
+    @current_title = id_to_obj[@cid][:name]
 
   end
 end
