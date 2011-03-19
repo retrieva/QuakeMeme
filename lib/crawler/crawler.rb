@@ -11,6 +11,7 @@ require 'app/models/content'
 require 'mechanize'
 require 'nokogiri'
 require 'kconv'
+require 'lib/crawler/extractcontent'
 
 $KCODE = 'u' if RUBY_VERSION < '1.9.0'
 
@@ -91,9 +92,10 @@ def html_analyze(url)
       agent = Mechanize.new
       page = agent.get(url)
       if page.class == Mechanize::Page
-        h['title'] = page.title.toutf8
+        desc, title = extract_description(page)
+        h['title'] = title.size > 0 ? title : page.title.toutf8
         h['images'] = page.image_urls[0..2].to_json
-        h['description'] = extract_description(page)
+        h['description'] = desc
       elsif page.class == Mechanize::File
         return { 'spam' => true } if page.code == 404
         h['title'] = page.filename
@@ -174,47 +176,34 @@ def add_page(url)
   puts "found: #{url}: #{page.original_url}"
 end
 
-def extract_description(page)
-  raw = page.parser.to_s
-  doc = Nokogiri(raw)
+def to_utf8(page)
+  re = /charset="?([^\s"]*)/i
+  cs = re.match(page)
 
-  # 1: <meta name="description" ...>があればそれを用いる
-  tmp = doc.search("//meta[@name='description']").first
-  return footcutter(tmp["content"]) if tmp && tmp["content"]
-
-  # 2: <!-- google_ad_section_start(name=s1, weight=.9) --> <!-- google_ad_section_end -->で囲まれた箇所があればそれを用いる
-  reg = /<!-- ?google_ad_section_start ?(?:\([^)]*\)|) ?-->(.*?)<!-- ?google_ad_section_end ?(?:\([^)]*\)|) ?-->/m
-  tmp = []
-  tmp2 = raw
-  while tmp2.length > 0 do
-    tmp3 = reg.match(tmp2)
-    if tmp3
-      tmp.push(tmp3[1].gsub(/<.*?>/, ""))
-      tmp2 = tmp3.post_match
-    else
-      break
+  enc = if cs and cs[1].size > 0
+    case cs[1].downcase[0].chr
+    when 'u' then Kconv::UTF8
+    when 'e' then Kconv::EUC
+    when 's' then Kconv::SJIS
+    else Kconv::AUTO
     end
+  else
+    Kconv::AUTO
   end
-  return footcutter(tmp.join("")) unless tmp.empty?
 
-  # 3: div.contents に囲まれた箇所があればそれを用いる
-  tmp = doc.search("//div[@class='contents']")
-  # 4: div.entry-body-text に囲まれた箇所があればそれを用いる
-  tmp = doc.search("//div[@class='entry-body-text']") if tmp.empty?
-  # 5: table#infobox に囲まれた箇所があればそれを用いる
-  tmp = doc.search("//table[@id='infobox']") if tmp.empty?
-  # 6: div.contents に囲まれた箇所があればそれを用いる
-  tmp = doc.search("//p").select{|a| a["class"] == "entry-content" || ["class"] == "2par" || (a["class"].nil? && a["id"].nil?)} if tmp.empty?
-  return footcutter(tmp.map{|a| a.to_s.gsub(/<.*?>/, "")}.join("")) unless tmp.empty?
-
-  # else: あきらめる
-  return ""
+  enc == Kconv::UTF8 ? page : Kconv.kconv(page, Kconv::UTF8, enc)
 end
 
 def footcutter(str, limit = 255)
-  ret = str.toutf8.split(//)[0...limit].join("")
+  ret = str.split(//)[0...limit].join("")
   ret.gsub!(/<[^>]*$/, "")
   ret
+end
+
+def extract_description(page)
+  content = to_utf8(page.parser.to_s)
+  body, title = ExtractContent::analyse(content)
+  [footcutter(body), title]
 end
 
 # Content
