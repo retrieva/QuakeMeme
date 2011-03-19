@@ -114,11 +114,11 @@ end
 
 def expand_url(orig_u)
   def expand_url_inner(url)
-    uri = url.kind_of?(URI) ? url : URI.parse(url)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.open_timeout = 60
-    http.read_timeout = 60
     begin
+      uri = url.kind_of?(URI) ? url : URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.open_timeout = 60
+      http.read_timeout = 60
       http.start { |io|
         r = io.head(uri.path)
         return r['Location'] || uri.to_s
