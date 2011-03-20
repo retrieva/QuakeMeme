@@ -294,6 +294,12 @@ h1:after {
 	margin-right: -3px;
 }
 
+.main h2 .elapse {
+	font-size: 75%;
+	line-height: 1.641;
+	float: right;
+}
+
 /*
  * page
  */

@@ -80,6 +80,10 @@ var pages = {
 				}
 			});
 
+			if (json.updated_at) {
+				that.elapse_date = new Date(json.updated_at);
+				that.elapse_show();
+			}
 			that.option('last_id', json.pages[0].id);
 		}).error(function (xhr, msg) {
 			if (msg === 'error' && xhr.status === 404) {
@@ -186,6 +190,45 @@ var pages = {
 		}
 	},
 
+	// 経過時間表示
+	elapse_tid: null,
+	elapse_date: 0,
+	elapse_text: function (t) {
+		// 秒単位
+		t /= 1000;
+		if (t < 60) {
+			t /= 10;
+			t = t|0;
+			return (t ? t + '0' : '数') + '秒';
+		}
+		// 分単位
+		t /= 60;
+		if (t < 60) {
+			return (t|0) + '分';
+		}
+		// 時間単位
+		t /= 60;
+		if (t < 24) {
+			return (t|0) + '時間';
+		}
+		// 日単位
+		t /= 24;
+		return (t|0) + '日';
+	},
+	elapse_show: function () {
+		if (!this.elapse_date) {
+			return false;
+		}
+		$('.elapse').text(this.elapse_text(new Date - this.elapse_date) + '前に更新');
+		return true;
+	},
+	elapse_init: function () {
+		var that = this;
+		this.elapse_tid = setInterval(function () {
+			that.elapse_show();
+		}, 1000);
+	},
+
 	// オプションデータの取得
 	option: function (name, value) {
 		var node = document.options[name];
@@ -230,4 +273,25 @@ $(function ($) {
 		}
 	});
 
+	pages.elapse_init();
+
 });
+
+/*
+ * blogparts
+ * /
+
+$.blogparts = function (url) {
+	var current = document;
+	while (current.nodeName.toLowerCase() !== 'script') {
+		current = current.lastChild;
+	}
+	$.getScript(url, function () {
+		console.log("!");
+	});
+};
+
+document.write = document.writeln = function () {
+	console.log(arguments);
+};
+*/
