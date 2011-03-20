@@ -3,13 +3,13 @@ require 'rubygems'
 require 'json'
 require 'uri'
 require 'net/http'
+require 'open-uri'
 require 'active_record'
 require 'active_support'
 require 'app/models/category'
 require 'app/models/page'
 require 'app/models/content'
 require 'mechanize'
-require 'nokogiri'
 require 'kconv'
 require 'lib/crawler/extractcontent'
 
@@ -100,7 +100,7 @@ def html_analyze(url)
       agent = Mechanize.new
       page = agent.get(url)
       if page.class == Mechanize::Page
-        desc, title = extract_description(page)
+        desc, title = extract_description(url)
         h['title'] = title.size > 0 ? title : page.title.toutf8
         h['images'] = page.image_urls[0..2].to_json
         h['description'] = desc
@@ -208,8 +208,9 @@ def footcutter(str, limit = 255)
   ret
 end
 
-def extract_description(page)
-  content = to_utf8(page.parser.to_s)
+def extract_description(url)
+  # Re-get page content for avoiding Mechanize corruption
+  content = to_utf8(open(url) { |page| page.read })
   body, title = ExtractContent::analyse(content)
   [footcutter(body), title]
 end
