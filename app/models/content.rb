@@ -11,7 +11,7 @@ class Content < ActiveRecord::Base
     cat = Category.find_by_id(catid)
     content = Content.find(:first, :conditions => {:content_type => ctype, :category_id => catid})
     return {} unless cat && ctype && content
-    ret = {:pages => [], :type => ctype, :category_name => cat.name, :updated_at => content.updated_at}
+    ret = {:pages => [], :type => ctype, :category_name => cat.name, :updated_at => content.updated_at - 9.hours}
 
     pagesjson = JSON.parse(content.json)
     pages = Page.find(:all, :conditions => {:spam => false, :url => pagesjson.map{|a| a[1]}})
