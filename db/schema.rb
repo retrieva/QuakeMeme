@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(:version => 20110318094247) do
     t.string   "title"
     t.string   "original_url"
     t.string   "description"
-    t.text     "image_url",    :limit => 255
+    t.text     "image_url"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "alive"

@@ -19,5 +19,6 @@ production:
   adapter: mysql
   user: root
   database: quakememe_production
-  host: ip-10-146-50-137.ap-northeast-1.compute.internal
+  password: a5j0l2z8
+  host: ip-10-146-113-123.ap-northeast-1.compute.internal
   encoding: utf8

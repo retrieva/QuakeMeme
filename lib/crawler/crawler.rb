@@ -244,6 +244,7 @@ def inner_crawl_category(cs)
       }
       add_content(c, type, entries)
       puts "crawled: type=#{type}, name=#{c.name}"
+      sleep 30
     }
   }
 end
@@ -301,6 +302,7 @@ elsif rails_env == "production"
    :adapter  => "mysql",
    :database => "quakememe_production",
    :user => "root",
+   :password => "a5j0l2z8",
    :encoding => "utf8",
    :timeout  => 5000)
 else
