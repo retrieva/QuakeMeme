@@ -537,4 +537,28 @@ h1:after {
 }
 
 
+.header_notation{
+    border : 1px solid #ccc;
+    border-radius : 6px;
+    background-color : white;
+    padding : 4px 15px;
+    width : 100%;
+}
+
+.header_notation h3{
+    font-size : 110%;
+    font-weight : bold;
+    color : red;
+}
+
+.header_notation div{
+    padding : 4px;
+}
+
+.header_notation p{
+    padding : 0px;
+    margin : 0px;
+}
+
+
 /*--------------------------------------------------------*/
